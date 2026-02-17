@@ -1,0 +1,44 @@
+name: micro ui CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  buildandpush:
+    name: Build and Push image to ACR
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Debug workspace
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Repository files:"
+          ls
+          echo "Service folder files:"
+          ls DeleteTaskTodoMicroservice
+
+      - name: Azure Login
+        uses: Azure/login@v2
+        with:
+          client-id: c960d18f-0982-4911-b05c-58f2d7ed267d
+          tenant-id: 0e1c81a8-6c88-4595-b678-60bce7c776f3
+          subscription-id: a9d94a25-6447-4066-bea9-a2f8668c6597
+
+      - name: Login to Azure Container Registry
+        run: az acr login --name appdeployentregistry
+
+      - name: Build Docker image
+        run: docker build -t appdeployentregistry.azurecr.io/deletetaskimage:${{ github.run_number }} -f DeleteTaskTodoMicroservice/Dockerfile DeleteTaskTodoMicroservice
+
+      - name: Push Docker image to ACR
+        run: docker push appdeployentregistry.azurecr.io/deletetaskimage:${{ github.run_number }}
