@@ -1,4 +1,4 @@
-name: micro ui CI/CD
+name: add task CI/CD
 
 on:
   push:
@@ -25,12 +25,12 @@ jobs:
           echo "Repository files:"
           ls
           echo "Service folder files:"
-          ls DeleteTaskTodoMicroservice
+          ls AddTaskTodoMicroservice
 
       - name: Azure Login
         uses: Azure/login@v2
         with:
-          client-id: c960d18f-0982-4911-b05c-58f2d7ed267d
+          client-id: ae41b9d6-6b8e-48f9-8642-b28b888345c2
           tenant-id: 0e1c81a8-6c88-4595-b678-60bce7c776f3
           subscription-id: a9d94a25-6447-4066-bea9-a2f8668c6597
 
@@ -38,7 +38,7 @@ jobs:
         run: az acr login --name appdeployentregistry
 
       - name: Build Docker image
-        run: docker build -t appdeployentregistry.azurecr.io/deletetaskimage:${{ github.run_number }} -f DeleteTaskTodoMicroservice/Dockerfile DeleteTaskTodoMicroservice
+        run: docker build -t appdeployentregistry.azurecr.io/addtaskrituimage:${{ github.run_number }} -f AddTaskTodoMicroservice/Dockerfile AddTaskTodoMicroservice
 
       - name: Push Docker image to ACR
-        run: docker push appdeployentregistry.azurecr.io/deletetaskimage:${{ github.run_number }}
+        run: docker push appdeployentregistry.azurecr.io/addtaskrituimage:${{ github.run_number }}
