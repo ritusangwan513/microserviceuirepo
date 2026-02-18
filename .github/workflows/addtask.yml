@@ -41,8 +41,8 @@ jobs:
         run: |
           docker build \
             -t appdeployentregistry.azurecr.io/addtaskrituimage:${{ github.run_number }} \
-            -f AddTaskTodoMicroservice/Dockerfile \
-            AddTaskTodoMicroservice
+            -f AddTaskTodoMicroservice
+            
 
       - name: Aqua Security Trivy
         uses: aquasecurity/trivy-action@0.34.0
