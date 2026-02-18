@@ -12,7 +12,8 @@ permissions:
 jobs:
   buildandpush:
     name: Build and Push image to ACR
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
+
 
     steps:
       - name: Checkout source code
