@@ -1,0 +1,52 @@
+name: Ui task CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  buildandpush:
+    name: Build and Push image to ACR
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Debug workspace
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Repository files:"
+          ls
+          echo "Service folder files:"
+          ls MicroTodoUI
+
+      - name: Azure Login
+        uses: Azure/login@v2
+        with:
+          client-id: ae41b9d6-6b8e-48f9-8642-b28b888345c2
+          tenant-id: 0e1c81a8-6c88-4595-b678-60bce7c776f3
+          subscription-id: a9d94a25-6447-4066-bea9-a2f8668c6597
+
+      - name: Login to Azure Container Registry
+        run: az acr login --name appdeployentregistry
+
+      - name: Build Docker Image
+        run: |
+          docker build -t uitaskrituimage MicroTodoUI
+            
+
+      - name: Aqua Security Trivy
+        uses: aquasecurity/trivy-action@0.34.0
+        with:
+          image-ref: uitaskrituimage
+
+      # - name: Push Docker image to ACR
+      #   run: docker push appdeployentregistry.azurecr.io/uitaskrituimage:${{ github.run_number }}
