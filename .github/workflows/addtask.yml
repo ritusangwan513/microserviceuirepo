@@ -38,7 +38,17 @@ jobs:
         run: az acr login --name appdeployentregistry
 
       - name: Build Docker image
-        run: docker build -t appdeployentregistry.azurecr.io/addtaskrituimage:${{ github.run_number }} -f AddTaskTodoMicroservice/Dockerfile AddTaskTodoMicroservice
+        run: |
+          docker build \
+            -t appdeployentregistry.azurecr.io/addtaskrituimage:${{ github.run_number }} \
+            -f AddTaskTodoMicroservice/Dockerfile \
+            AddTaskTodoMicroservice
+
+      - name: Aqua Security Trivy
+        uses: aquasecurity/trivy-action@0.34.0
+        with:
+          image-ref: appdeployentregistry.azurecr.io/addtaskrituimage:${{ github.run_number }}
 
       - name: Push Docker image to ACR
         run: docker push appdeployentregistry.azurecr.io/addtaskrituimage:${{ github.run_number }}
+
